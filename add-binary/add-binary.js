@@ -4,57 +4,43 @@
  * @return {string}
  */
 var addBinary = function(a, b) {
-    let result = [];
-    let carry = false;
-    // compare last value
-    // last value is
-    // a[a.length - 1], b[b.length - 1]
-    let aIndex = a.length - 1;
-    let bIndex = b.length - 1;
-    while (aIndex >= 0 && bIndex >= 0) {
-        if (a[aIndex] === '1' && b[bIndex] === '1') {
-            if (carry) {
-                result.unshift('1')
-            } else {
-                result.unshift('0')
-            }
-            carry = true;
-        } else if (a[aIndex] === '0' && b[bIndex] === '0') {
-            if (carry) {
-                result.unshift('1')
-                
-            } else {
-                result.unshift('0');
-            }
-            carry = false;
-        } else {
-            if (carry) {
-                result.unshift('0');
-            } else {
-                result.unshift('1');
-            }
+    let first = parseInt(a, 2);
+    let second = parseInt(b, 2);
+    // not actually max int, need smaller num
+    const max_int = Math.pow(2, 8) - 1;
+    let excessA = 0;
+    let excessB = 0;
+    let next = '';
+    let result = '';
+    if (first > max_int) {
+        excessA = a.slice(0, a.length - 8);
+        first = parseInt(a.slice(a.length - 8, a.length), 2);
+    }
+    if (second > max_int) {
+        excessB = b.slice(0, b.length - 8);
+        second = parseInt(b.slice(b.length - 8, b.length), 2);
+    }
+    console.log(first, second, excessA, excessB)
+    let noCarry = first ^ second;
+    let carry = (first & second) << 1; 
+    while (carry > 0) {
+        let temp = (carry & noCarry) << 1;
+        noCarry = noCarry ^ carry;
+        carry = temp;
+    }
+    result = noCarry.toString(2);
+    if (excessA > 0 || excessB > 0) {
+        next = addBinary(excessA, excessB);
+        while (result.length < 8) {
+            result = '0' + result;
         }
-        aIndex--;
-        bIndex--;
     }
-    let remaining = b;
-    if (aIndex >= 0) {
-        remaining = a;
-        bIndex = aIndex;
+    console.log(result.length, 'res len')
+    if (result.length > 8) {
+        next = addBinary(next, '1');
+        result = result.slice(1, 9);
+        console.log(result, 'res')
     }
-    while (bIndex >= 0) {
-        if (carry && remaining[bIndex] === '1') {
-            result.unshift('0');
-        } else if (carry && remaining[bIndex] === '0') {
-            result.unshift('1');
-            carry = false;
-        } else {
-            result.unshift(remaining[bIndex])
-        }
-        bIndex--;
-    }
-    if (carry) {
-        result.unshift('1');
-    }
-    return result.join('');
+    console.log(next, result)
+    return next + result;
 };
