@@ -8,9 +8,7 @@ public:
             return memo[n];
         }
         vector<string> result;
-        if (n == 1) {
-            result.push_back("()");
-        } else {
+
             vector<string> prev = generateParenthesis(n - 1);
             for (int i = 0; i < prev.size(); i++) {
                 string enclose = "(" +  prev[i] + ")";
@@ -27,7 +25,7 @@ public:
 
                 }
             }
-        }
+        
         memo.push_back(result);
         return memo[n];
     }
