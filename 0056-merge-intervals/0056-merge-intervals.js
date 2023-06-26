@@ -4,10 +4,9 @@
  */
 var merge = function(intervals) {
     intervals.sort((a, b) => a[0] - b[0]);
-    const length = intervals.length;
     let index = 0;
     const results = [];
-    while (index < length) {
+    while (index < intervals.length) {
         const start = intervals[index][0];
         let end = intervals[index][1];
         index += 1;
